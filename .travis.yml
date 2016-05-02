@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - hhvm
+
+install:
+  - composer install
+
+script:
+  - hh_client
+  - ./vendor/bin/phpspec run

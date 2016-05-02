@@ -1,0 +1,4 @@
+suites:
+    dein_suite:
+        namespace: Dein
+        psr4_prefix: Dein

@@ -1,0 +1,12 @@
+{
+    "name": "zumb/dein",
+    "require-dev": {
+        "phpspec/phpspec": "^2.5",
+        "phpspec/prophecy": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dein\\": "src/"
+        }
+    }
+}
