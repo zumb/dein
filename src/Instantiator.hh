@@ -1,9 +1,9 @@
 <?hh //strict
-namespace Dein;
+namespace Zumb\Dein;
 
-use Dein\Interfaces\Provider;
-use Dein\ContainerService;
-use Dein\Reflection\ClassInspector;
+use Zumb\Dein\Interfaces\Provider;
+use Zumb\Dein\ContainerService;
+use Zumb\Dein\Reflection\ClassInspector;
 
 class Instantiator
 {

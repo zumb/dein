@@ -1,12 +1,12 @@
 <?hh //partial
 
-namespace spec\Dein;
+namespace spec\Zumb\Dein;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Dein\ContainerService;
-use Dein\Interfaces\Provider;
-use Dein\Reflection\ClassInspector;
+use Zumb\Dein\ContainerService;
+use Zumb\Dein\Interfaces\Provider;
+use Zumb\Dein\Reflection\ClassInspector;
 
 class InstantiatorSpec extends ObjectBehavior
 {

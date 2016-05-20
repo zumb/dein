@@ -1,4 +1,4 @@
 suites:
     dein_suite:
-        namespace: Dein
-        psr4_prefix: Dein
+        namespace: Zumb\Dein
+        psr4_prefix: Zumb\Dein

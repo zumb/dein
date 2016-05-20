@@ -1,9 +1,9 @@
 <?hh //strict
-namespace Dein\Providers;
+namespace Zumb\Dein\Providers;
 
-use Dein\Interfaces\Provider;
-use Dein\Reflection\ClassInspector;
-use Dein\ContainerService;
+use Zumb\Dein\Interfaces\Provider;
+use Zumb\Dein\Reflection\ClassInspector;
+use Zumb\Dein\ContainerService;
 
 class ProvidersProvider implements Provider<Provider<mixed>>
 {

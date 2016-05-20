@@ -1,10 +1,10 @@
 <?hh //strict
-namespace Dein;
+namespace Zumb\Dein;
 
-use Dein\Reflection\ClassInspector;
-use Dein\Interfaces\Provider;
-use Dein\Providers\ProvidersProvider;
-use Dein\Providers\ContainerServiceProvider;
+use Zumb\Dein\Reflection\ClassInspector;
+use Zumb\Dein\Interfaces\Provider;
+use Zumb\Dein\Providers\ProvidersProvider;
+use Zumb\Dein\Providers\ContainerServiceProvider;
 
 class ContainerService
 {

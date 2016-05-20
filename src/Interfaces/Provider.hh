@@ -1,7 +1,7 @@
 <?hh //strict
-namespace Dein\Interfaces;
+namespace Zumb\Dein\Interfaces;
 
-use Dein\Reflection\ClassInspector;
+use Zumb\Dein\Reflection\ClassInspector;
 
 interface Provider<Tp>
 {

@@ -26,17 +26,17 @@ class ThirdLevel {
 }
 
 /* Provider for the class that needs parameters, implementing Provider interface */
-class ThirdLevelProvider implements \Dein\Interfaces\Provider<ThirdLevel>
+class ThirdLevelProvider implements \Zumb\Dein\Interfaces\Provider<ThirdLevel>
 {
   /* The only method needed to implement, that will return the instance */
-  public function get(\Dein\Reflection\ClassInspector<ThirdLevel> $class):ThirdLevel
+  public function get(\Zumb\Dein\Reflection\ClassInspector<ThirdLevel> $class):ThirdLevel
   {
     return new ThirdLevel(rand(50, 100));
   }
 }
 
 /* Create the container */
-$container = \Dein\ContainerService::start();
+$container = \Zumb\Dein\ContainerService::start();
 /* Add custom providers */
 $container->addProvider(ThirdLevelProvider::class);
 /* Get the instance */

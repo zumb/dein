@@ -1,8 +1,8 @@
 <?hh //strict
-namespace Dein\Reflection;
+namespace Zumb\Dein\Reflection;
 
-use Dein\Interfaces\Provider;
-use Dein\ContainerService;
+use Zumb\Dein\Interfaces\Provider;
+use Zumb\Dein\ContainerService;
 
 class ClassInspector<Tp> extends \ReflectionClass
 {
