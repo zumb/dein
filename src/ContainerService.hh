@@ -55,11 +55,4 @@ class ContainerService
     return null;
   }
 
-  public static function start():ContainerService
-  {
-    $container = new self(new Instantiator());
-    $container->addProvider(new ContainerServiceProvider($container));
-    $container->addProvider(ProvidersProvider::class);
-    return $container;
-  }
 }

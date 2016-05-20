@@ -36,7 +36,7 @@ class ThirdLevelProvider implements \Zumb\Dein\Interfaces\Provider<ThirdLevel>
 }
 
 /* Create the container */
-$container = \Zumb\Dein\ContainerService::start();
+$container = \Zumb\Dein\Factory::create();
 /* Add custom providers */
 $container->addProvider(ThirdLevelProvider::class);
 /* Get the instance */
