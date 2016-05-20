@@ -36,7 +36,7 @@ class ThirdLevelProvider implements \Dein\Interfaces\Provider<ThirdLevel>
 }
 
 /* Create the container */
-$container = new \Dein\ContainerService();
+$container = \Dein\ContainerService::start();
 /* Add custom providers */
 $container->addProvider(ThirdLevelProvider::class);
 /* Get the instance */

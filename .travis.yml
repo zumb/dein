@@ -8,4 +8,5 @@ install:
 
 script:
   - hh_client
+  - hhvm examples/ObjectCreation.hh
   - ./vendor/bin/phpspec run

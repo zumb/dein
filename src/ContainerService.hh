@@ -10,16 +10,15 @@ class ContainerService
 {
   protected  Map<classname<mixed>, mixed> $providers = Map{};
 
-  public function __construct() {
-    echo "container";
-    $this->addProvider(new ContainerServiceProvider($this));
-    $this->addProvider(ProvidersProvider::class);
-  }
+  public function __construct(
+    protected Instantiator $instantiator
+  ) {}
 
   public function get(string $class):mixed
   {
-    $reflection = new ClassInspector($class, $this);
-    return $reflection->instance();
+    return $this->instantiator->make(
+      $this->instantiator->inspector($class), $this
+    );
   }
 
   public function resolve(\ReflectionMethod $method):Map<string, mixed>
@@ -35,15 +34,15 @@ class ContainerService
 
   public function addProvider(mixed $provider):this
   {
-    $provide = new \ReflectionMethod($provider, "get");
+    $provide = $this->instantiator->method($provider, "get");
     $this->providers->set($provide->getReturnTypeText(), $provider);
     return $this;
   }
 
-  public function getProvider(\ReflectionClass $class):?Provider<mixed>
+  public function getProvider(ClassInspector<mixed> $class):?Provider<mixed>
   {
     foreach($this->providers as $returns => $provider) {
-      if($class->isSubclassOf($returns) || $class->getName() == $returns) {
+      if($class->is($returns)) {
         if($provider instanceof Provider) {
           return $provider;
         } elseif(is_string($provider)) {
@@ -54,5 +53,13 @@ class ContainerService
       }
     }
     return null;
+  }
+
+  public static function start():ContainerService
+  {
+    $container = new self(new Instantiator());
+    $container->addProvider(new ContainerServiceProvider($container));
+    $container->addProvider(ProvidersProvider::class);
+    return $container;
   }
 }
