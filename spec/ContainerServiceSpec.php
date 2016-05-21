@@ -7,40 +7,54 @@ use Prophecy\Argument;
 use Zumb\Dein\Instantiator;
 use Zumb\Dein\Interfaces\Provider;
 use Zumb\Dein\Reflection\ClassInspector;
+use Zumb\Dein\Resolver;
+use Zumb\Dein\ProvidersPool;
 
 class ContainerServiceSpec extends ObjectBehavior
 {
-  public function let($instantiator, $method, $provider, $inspector)
+  public function let($instantiator, $method, $provider, $inspector, $resolver, $providers)
   {
     $inspector->beADoubleOf(ClassInspector::class);
     $provider->beADoubleOf(Provider::class);
     $method->beADoubleOf(\ReflectionMethod::class);
     $instantiator->beADoubleOf(Instantiator::class);
-    $this->beConstructedWith($instantiator);
+    $resolver->beADoubleOf(Resolver::class);
+    $providers->beADoubleOf(ProvidersPool::class);
+    $this->beConstructedWith($instantiator, $resolver, $providers);
   }
 
-  public function it_returns_instance($instantiator, $inspector)
+
+
+  public function it_returns_instance_without_provider_and_constructor($inspector, $instantiator)
   {
-    $instantiator->inspector(\stdClass::class)
+    $instantiator->inspector("SomeClass")
       ->willReturn($inspector);
-    $instantiator->make($inspector, $this)
+    $inspector->getConstructor()
+      ->willReturn(null);
+    $inspector->newInstance()
       ->shouldBeCalled()
-      ->willReturn("instance");
-    $this->get(\stdClass::class)
-      ->shouldReturn("instance");
+      ->willReturn("object");
+    $this->get("SomeClass")
+      ->shouldReturn("object");
   }
 
-  public function it_adds_a_provider_instance($provider, $instantiator, $method, $inspector)
+  public function it_returns_instance_from_provider($inspector, $instantiator, $provider, $method, $providers, $resolver)
   {
-    $method->getReturnTypeText()
-      ->willReturn("SomeClass");
+    $object = new \stdClass();
+    $instantiator->inspector("SomeClass")
+      ->willReturn($inspector);
     $instantiator->method($provider, "get")
       ->willReturn($method);
-    $this->addProvider($provider);
-    $inspector->is("SomeClass")
-      ->willReturn(true);
-    $this->getProvider($inspector)
-      ->shouldReturn($provider);
+    $inspector->getConstructor()
+      ->willReturn(null);
+    $providers->get($inspector)
+      ->willReturn($provider);
+    $resolver->attributes($method, $this)
+      ->willReturn([]);
+    $method->invokeArgs($provider, [$inspector])
+      ->willReturn($object);
+    $this->get("SomeClass")
+      ->shouldReturn($object);
   }
 
 }

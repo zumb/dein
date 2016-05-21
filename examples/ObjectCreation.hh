@@ -25,20 +25,28 @@ class ThirdLevel {
   ) {}
 }
 
+class Randomizer {
+  public function random() {
+    return rand(50, 100);
+  }
+}
+
 /* Provider for the class that needs parameters, implementing Provider interface */
 class ThirdLevelProvider implements \Zumb\Dein\Interfaces\Provider<ThirdLevel>
 {
   /* The only method needed to implement, that will return the instance */
-  public function get(\Zumb\Dein\Reflection\ClassInspector<ThirdLevel> $class):ThirdLevel
+  <<Inject('Example\Randomizer')>>
+  public function get(\Zumb\Dein\Reflection\ClassInspector<ThirdLevel> $class, ... $dependencies):ThirdLevel
   {
-    return new ThirdLevel(rand(50, 100));
+    $randomizer = array_pop($dependencies);
+    return new ThirdLevel($randomizer->random());
   }
 }
 
 /* Create the container */
 $container = \Zumb\Dein\Factory::create();
 /* Add custom providers */
-$container->addProvider(ThirdLevelProvider::class);
+$container->providers->add(new ThirdLevelProvider());
 /* Get the instance */
 $instance = $container->get(FirstLevel::class);
 var_dump($instance);

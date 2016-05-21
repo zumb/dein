@@ -2,57 +2,51 @@
 namespace Zumb\Dein;
 
 use Zumb\Dein\Reflection\ClassInspector;
-use Zumb\Dein\Interfaces\Provider;
-use Zumb\Dein\Providers\ProvidersProvider;
-use Zumb\Dein\Providers\ContainerServiceProvider;
 
 class ContainerService
 {
-  protected  Map<classname<mixed>, mixed> $providers = Map{};
-
   public function __construct(
-    protected Instantiator $instantiator
+    protected Instantiator $instantiator,
+    protected Resolver $resolver,
+    public ProvidersPool $providers
   ) {}
 
   public function get(string $class):mixed
   {
-    return $this->instantiator->make(
-      $this->instantiator->inspector($class), $this
+    $inspector = $this->instantiator->inspector($class);
+    $provider = $this->providers->get($inspector);
+    if($provider != null) {
+      $method = $this->instantiator->method($provider, "get");
+      return $method->invokeArgs($provider,
+        array_merge([$inspector], $this->resolver->attributes($method, $this))
+      );
+    }
+    return $this->create($inspector);
+  }
+
+  public function call(\ReflectionMethod $method, mixed $object):mixed
+  {
+    return $method->invokeArgs($object,
+      array_merge(
+        $this->resolver->parameters($method, $this),
+        $this->resolver->attributes($method, $this)
+      )
     );
   }
 
-  public function resolve(\ReflectionMethod $method):Map<string, mixed>
+  public function create(ClassInspector<mixed> $class):mixed
   {
-    $resolvedParameters = new Map(null);
-    foreach ($method->getParameters() as $parameter) {
-      $resolvedParameters->set(
-        $parameter->getName(), $this->get($parameter->getTypeText())
-      );
-    }
-    return $resolvedParameters;
-  }
-
-  public function addProvider(mixed $provider):this
-  {
-    $provide = $this->instantiator->method($provider, "get");
-    $this->providers->set($provide->getReturnTypeText(), $provider);
-    return $this;
-  }
-
-  public function getProvider(ClassInspector<mixed> $class):?Provider<mixed>
-  {
-    foreach($this->providers as $returns => $provider) {
-      if($class->is($returns)) {
-        if($provider instanceof Provider) {
-          return $provider;
-        } elseif(is_string($provider)) {
-          $providerInstance = $this->get($provider);
-          invariant($providerInstance instanceof Provider, "Not a provider");
-          return $providerInstance;
-        }
+    $constructor = $class->getConstructor();
+    if($constructor != null) {
+      if(count($constructor->getParameters())) {
+        return $class->newInstanceArgs(
+          $this->resolver->parameters($constructor, $this)
+        );
       }
     }
-    return null;
+    return $class->newInstance();
   }
+
+
 
 }

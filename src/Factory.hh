@@ -2,16 +2,18 @@
 namespace Zumb\Dein;
 
 use Zumb\Dein\ContainerService;
-use Zumb\Dein\Providers\ContainerServiceProvider;
+use Zumb\Dein\Providers\SingletonProvider;
 use Zumb\Dein\Providers\ProvidersProvider;
 
 class Factory
 {
   public static function create():ContainerService
   {
-    $container = new ContainerService(new Instantiator());
-    $container->addProvider(new ContainerServiceProvider($container));
-    $container->addProvider(ProvidersProvider::class);
+    $instantiator = new Instantiator();
+    $container = new ContainerService(
+      $instantiator, new Resolver(), new ProvidersPool($instantiator)
+    );
+    $container->providers->add(new SingletonProvider($container));
     return $container;
   }
 }

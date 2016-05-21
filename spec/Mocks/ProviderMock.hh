@@ -6,7 +6,7 @@ use Zumb\Dein\Reflection\ClassInspector;
 
 class ProviderMock implements Provider<\stdClass>
 {
-  public function get(ClassInspector<\stdClass> $class):\stdClass
+  public function get(ClassInspector<\stdClass> $class, ... array<mixed> $dependencies):\stdClass
   {
     return new \stdClass();
   }

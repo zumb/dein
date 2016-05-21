@@ -5,5 +5,5 @@ use Zumb\Dein\Reflection\ClassInspector;
 
 interface Provider<Tp>
 {
-  public function get(ClassInspector<Tp> $class):Tp;
+  public function get(ClassInspector<Tp> $class, ...):Tp;
 }
