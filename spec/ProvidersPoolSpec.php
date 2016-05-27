@@ -7,7 +7,9 @@ use Prophecy\Argument;
 use Zumb\Dein\Instantiator;
 use Zumb\Dein\Interfaces\Provider;
 use Zumb\Dein\Reflection\ClassInspector;
+use Zumb\Dein\Providers\SingletonProvider;
 
+class stdClassProvider extends SingletonProvider<\stdClass> {}
 
 class ProvidersPoolSpec extends ObjectBehavior
 {
@@ -29,6 +31,18 @@ class ProvidersPoolSpec extends ObjectBehavior
     $inspector->is("SomeClass")
       ->willReturn(true);
     $this->add($provider);
+    $this->get($inspector)
+      ->shouldReturn($provider);
+  }
+
+  public function it_overwrites_class_target($instantiator, $inspector)
+  {
+    $provider = new stdClassProvider(new \stdClass());
+    $instantiator->method($provider, "get")
+      ->willReturn(new \Reflectionmethod($provider, "get"));
+    $inspector->is("stdClass")
+      ->willReturn(true);
+    $this->add($provider, \stdClass::class);
     $this->get($inspector)
       ->shouldReturn($provider);
   }

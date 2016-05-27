@@ -12,10 +12,13 @@ class ProvidersPool
     protected Instantiator $instantiator
   ) {}
 
-  public function add(Provider<mixed> $provider):this
+  public function add(Provider<mixed> $provider, ?classname<mixed> $classTarget = null):this
   {
-    $getMethod = $this->instantiator->method($provider, "get");
-    $this->providers->set($getMethod->getReturnTypeText(), $provider);
+    if($classTarget === null) {
+      $getMethod = $this->instantiator->method($provider, "get");
+      $classTarget = $getMethod->getReturnTypeText();
+    }
+    $this->providers->set($classTarget, $provider);
     return $this;
   }
 
